@@ -3,4 +3,6 @@
     <string name="tv_hello">你好</string>
     <string name="btn_ok">确定</string>
     <string name="btn_cancle">取消</string>
+    <string name="toast_ok">你选对了^_^</string>
+    <string name="toast_err">你完蛋了！！！</string>
 </resources>

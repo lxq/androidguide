@@ -1,11 +1,13 @@
 <resources>
     <string name="app_name">GeoQuiz</string>
     <string name="tv_hello">你好</string>
-    <string name="btn_ok">确定</string>
-    <string name="btn_cancle">取消</string>
+    <string name="btn_ok">正确</string>
+    <string name="btn_cancle">错误</string>
     <string name="toast_ok">你选对了^_^</string>
     <string name="toast_err">你完蛋了！！！</string>
-    <string name="btn_next">下一个</string>
+    <string name="btn_next">下一题</string>
+    <string name="btn_preview">上一题</string>
+    <string name="info_qu">已经是第一题</string>
     
     <string name="qu_australia">堪培拉是澳大利亚首都</string>
     <string name="qu_ocean">太平洋比大西洋更大</string>

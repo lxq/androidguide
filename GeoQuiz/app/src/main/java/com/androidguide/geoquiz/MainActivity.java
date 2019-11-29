@@ -14,6 +14,7 @@ public class MainActivity extends AppCompatActivity {
     private Button btnOk;
     private Button btnCancle;
     private Button btnNext;
+    private Button btnPrev;
     private TextView tvQuestion;
 
     // 数组
@@ -38,14 +39,14 @@ public class MainActivity extends AppCompatActivity {
         btnOk.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this, R.string.toast_ok, Toast.LENGTH_SHORT).show();
+                checkAnswer(true);
             }
         });
         btnCancle = findViewById(R.id.btn_cancle);
         btnCancle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this, R.string.toast_err, Toast.LENGTH_SHORT).show();
+                checkAnswer(false);
             }
         });
 
@@ -60,11 +61,34 @@ public class MainActivity extends AppCompatActivity {
                 updateQuestion();
             }
         });
+
+        btnPrev = findViewById(R.id.btn_pre);
+        btnPrev.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mCurIdx == 0) {
+                    Toast.makeText(MainActivity.this, R.string.info_qu, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                mCurIdx = (mCurIdx - 1)%mQuestions.length;
+                updateQuestion();
+            }
+        });;
     }
 
     private void updateQuestion() {
         int id = mQuestions[mCurIdx].getTextId();
         tvQuestion.setText(id);
-        Toast.makeText(MainActivity.this, Integer.toString(mCurIdx), Toast.LENGTH_SHORT).show();
+    }
+
+    private void checkAnswer(boolean flag) {
+        boolean res = mQuestions[mCurIdx].isAnswer();
+        int id = -1;
+        if (flag == res) {
+            id = R.string.toast_ok;
+        } else  {
+            id = R.string.toast_err;
+        }
+        Toast.makeText(MainActivity.this, id, Toast.LENGTH_SHORT).show();
     }
 }

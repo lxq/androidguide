@@ -41,10 +41,27 @@
                 android:text="@string/btn_cancle" />
         </LinearLayout>
 
-        <Button
-            android:id="@+id/btn_Next"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/btn_next" />
+            android:layout_height="106dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_pre"
+                android:layout_width="182dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/btn_preview"
+                android:drawableLeft="@drawable/arrow_left"
+                android:drawablePadding="4dp" />
+
+            <Button
+                android:id="@+id/btn_Next"
+                android:layout_width="203dp"
+                android:layout_height="wrap_content"
+                android:drawableRight="@drawable/arrow_right"
+                android:drawablePadding="4dp"
+                android:text="@string/btn_next" />
+        </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

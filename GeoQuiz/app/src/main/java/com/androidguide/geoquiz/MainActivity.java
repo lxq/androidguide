@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,6 +17,9 @@ public class MainActivity extends AppCompatActivity {
     private Button btnNext;
     private Button btnPrev;
     private TextView tvQuestion;
+
+    private ImageButton imgBtnPrev;
+    private ImageButton imgBtnNext;
 
     // 数组
     private Question[] mQuestions = new Question[] {
@@ -74,6 +78,28 @@ public class MainActivity extends AppCompatActivity {
                 updateQuestion();
             }
         });;
+
+        // 图标按钮
+        imgBtnPrev = findViewById(R.id.imgBtn_prev);
+        imgBtnPrev.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                if (mCurIdx == 0) {
+                    Toast.makeText(MainActivity.this, R.string.info_qu, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                mCurIdx = (mCurIdx - 1)%mQuestions.length;
+                updateQuestion();
+            }
+        });
+        imgBtnNext = findViewById(R.id.imgBtnNext);
+        imgBtnNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCurIdx = (mCurIdx + 1)%mQuestions.length;
+                updateQuestion();
+            }
+        });
     }
 
     private void updateQuestion() {

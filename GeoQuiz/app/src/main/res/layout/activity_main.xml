@@ -63,5 +63,25 @@
                 android:drawablePadding="4dp"
                 android:text="@string/btn_next" />
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="133dp"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/imgBtn_prev"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/arrow_left" />
+
+            <ImageButton
+                android:id="@+id/imgBtnNext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/arrow_right" />
+        </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

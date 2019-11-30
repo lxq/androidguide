@@ -13,6 +13,7 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
     // 静态成员
     private static final String TAG = "MAINACTIVITY";
+    private static final String KEY = "index";
 
     // 类成员
     private Button btnOk;
@@ -42,6 +43,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Log.d(TAG, "onCreate()");
+
+        // 获取Activity的状态
+        if (savedInstanceState != null) {
+            mCurIdx = savedInstanceState.getInt(KEY, 0);
+        }
 
         // 按钮事件
         btnOk = findViewById(R.id.btn_ok);
@@ -136,6 +142,17 @@ public class MainActivity extends AppCompatActivity {
     public void onPause() {
         super.onPause();
         Log.d(TAG, "onPause()");
+    }
+
+    // onSaveInstanceState()在onStop()前被调用
+    // 默认实现将Activity的状态数据保存在Bundel对象中，Bundle是字符串与限定值之间的健值对结构。
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+
+        Log.d(TAG, "onSaveInstanceState()");
+        savedInstanceState.putInt(KEY, mCurIdx);
     }
 
     private void updateQuestion() {

@@ -8,11 +8,16 @@
     <string name="btn_next">下一题</string>
     <string name="btn_preview">上一题</string>
     <string name="info_qu">已经是第一题</string>
-    
+
     <string name="qu_australia">堪培拉是澳大利亚首都</string>
     <string name="qu_ocean">太平洋比大西洋更大</string>
     <string name="qu_mideast">苏伊士运河连接了红海和印度洋</string>
     <string name="qu_africa">尼罗河源头在埃及</string>
     <string name="qu_americas">亚马逊河是美洲最长的河流</string>
     <string name="qu_asia">贝尔加湖是世界最古老和最深的淡水湖</string>
+
+    <string name="btn_cheat">作弊</string>
+    <string name="btn_answer">答案</string>
+    <string name="toast_jugement">作弊是不对的！</string>
+    <string name="tv_warnging">你确定这样做？</string>
 </resources>

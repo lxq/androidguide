@@ -2,6 +2,8 @@ package com.androidguide.geoquiz;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,6 +16,8 @@ public class MainActivity extends AppCompatActivity {
     // 静态成员
     private static final String TAG = "MAINACTIVITY";
     private static final String KEY = "index";
+    // Intent传递数据时，KEY尽量带是包名，以保证整个系统的数据ID唯一性。
+    private static final String ANSWER_IS_TRUE ="com.androidguide.geoquiz.answer_is_true";
 
     // 类成员
     private Button btnOk;
@@ -24,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
 
     private ImageButton imgBtnPrev;
     private ImageButton imgBtnNext;
+
+    private Button btnCheat;
 
     // 数组
     private Question[] mQuestions = new Question[] {
@@ -111,6 +117,17 @@ public class MainActivity extends AppCompatActivity {
                 updateQuestion();
             }
         });
+
+        btnCheat = findViewById(R.id.btn_cheat);
+        btnCheat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // start activity
+                boolean flag = mQuestions[mCurIdx].isAnswer();
+                Intent intent = newInent(MainActivity.this, flag);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -169,5 +186,12 @@ public class MainActivity extends AppCompatActivity {
             id = R.string.toast_err;
         }
         Toast.makeText(MainActivity.this, id, Toast.LENGTH_SHORT).show();
+    }
+
+    // static method
+    public static Intent newInent(Context ctx, boolean data) {
+        Intent intent = new Intent(ctx, CheatActivity.class);
+        intent.putExtra(ANSWER_IS_TRUE, data);
+        return intent;
     }
 }

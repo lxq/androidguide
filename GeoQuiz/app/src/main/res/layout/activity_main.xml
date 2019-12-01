@@ -18,13 +18,21 @@
             android:id="@+id/tv_Question"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="20dp"
             android:text="@string/tv_hello"
             android:textAlignment="center" />
+
+        <Button
+            android:id="@+id/btn_cheat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_cheat" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="20dp">
 
             <Button
                 android:id="@+id/btn_ok"
@@ -44,16 +52,17 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="106dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="20dp">
 
             <Button
                 android:id="@+id/btn_pre"
                 android:layout_width="182dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/btn_preview"
                 android:drawableLeft="@drawable/arrow_left"
-                android:drawablePadding="4dp" />
+                android:drawablePadding="4dp"
+                android:text="@string/btn_preview" />
 
             <Button
                 android:id="@+id/btn_Next"

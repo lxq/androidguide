@@ -16,8 +16,11 @@ public class MainActivity extends AppCompatActivity {
     // 静态成员
     private static final String TAG = "MAINACTIVITY";
     private static final String KEY = "index";
+    private static final int REQUEST_CODE_CHEAT = 0;
+
     // Intent传递数据时，KEY尽量带是包名，以保证整个系统的数据ID唯一性。
     private static final String ANSWER_IS_TRUE ="com.androidguide.geoquiz.answer_is_true";
+    private static final String ANSWER_HAS_SHOWN ="com.androidguide.geoquiz.answer_haw_shown";
 
     // 类成员
     private Button btnOk;
@@ -42,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     };
 
     private  int mCurIdx = 0;
+    private boolean mCheated = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mCurIdx = (mCurIdx + 1)%mQuestions.length;
+                mCheated = false;
                 updateQuestion();
             }
         });
@@ -92,9 +97,10 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
                 mCurIdx = (mCurIdx - 1)%mQuestions.length;
+                mCheated = false;
                 updateQuestion();
             }
-        });;
+        });
 
         // 图标按钮
         imgBtnPrev = findViewById(R.id.imgBtn_prev);
@@ -124,8 +130,9 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // start activity
                 boolean flag = mQuestions[mCurIdx].isAnswer();
-                Intent intent = newInent(MainActivity.this, flag);
-                startActivity(intent);
+                Intent intent = newIntent(MainActivity.this, flag);
+//                startActivity(intent);
+                startActivityForResult(intent, REQUEST_CODE_CHEAT);
             }
         });
     }
@@ -172,6 +179,19 @@ public class MainActivity extends AppCompatActivity {
         savedInstanceState.putInt(KEY, mCurIdx);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (RESULT_OK != resultCode) {
+            return;
+        }
+        if (REQUEST_CODE_CHEAT == requestCode) {
+            if (null == data) {
+                return;
+            }
+            mCheated = data.getBooleanExtra(ANSWER_HAS_SHOWN, false);
+        }
+    }
+
     private void updateQuestion() {
         int id = mQuestions[mCurIdx].getTextId();
         tvQuestion.setText(id);
@@ -180,16 +200,20 @@ public class MainActivity extends AppCompatActivity {
     private void checkAnswer(boolean flag) {
         boolean res = mQuestions[mCurIdx].isAnswer();
         int id = -1;
-        if (flag == res) {
-            id = R.string.toast_ok;
-        } else  {
-            id = R.string.toast_err;
+        if (mCheated) {
+            id = R.string.toast_jugement;
+        } else {
+            if (flag == res) {
+                id = R.string.toast_ok;
+            } else  {
+                id = R.string.toast_err;
+            }
         }
         Toast.makeText(MainActivity.this, id, Toast.LENGTH_SHORT).show();
     }
 
     // static method
-    public static Intent newInent(Context ctx, boolean data) {
+    public static Intent newIntent(Context ctx, boolean data) {
         Intent intent = new Intent(ctx, CheatActivity.class);
         intent.putExtra(ANSWER_IS_TRUE, data);
         return intent;

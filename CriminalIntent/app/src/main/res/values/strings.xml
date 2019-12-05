@@ -5,4 +5,7 @@
     <string name="crime_title_hint">输入习惯标题</string>
     <string name="crime_details_label">习惯内容</string>
     <string name="crime_solved_label">已解决</string>
+
+    <string name="crime_item_title">标题</string>
+    <string name="crime_item_date">日期</string>
 </resources>

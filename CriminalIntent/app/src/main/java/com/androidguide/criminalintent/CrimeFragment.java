@@ -18,6 +18,9 @@ import androidx.fragment.app.Fragment;
 import java.util.UUID;
 
 public class CrimeFragment extends Fragment {
+    // Intent数据传输ID
+    public static final String EXTRA_CRIME_ID = "com.androidguide.criminalintent.crime_id";
+
     private Crime mCrime;
 
     private EditText mEtTitle;
@@ -28,7 +31,7 @@ public class CrimeFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        UUID uuid = (UUID) getActivity().getIntent().getSerializableExtra(CrimeActivity.EXTRA_CRIME_ID);
+        UUID uuid = (UUID) getActivity().getIntent().getSerializableExtra(EXTRA_CRIME_ID);
         mCrime = CrimeLab.get(getActivity()).getCrime(uuid);
     }
 

@@ -19,7 +19,7 @@ import java.util.UUID;
 
 public class CrimeFragment extends Fragment {
     // Intent数据传输ID
-    public static final String EXTRA_CRIME_ID = "com.androidguide.criminalintent.crime_id";
+    private static final String ARG_CRIME_ID = "com.androidguide.criminalintent.crime_id";
 
     private Crime mCrime;
 
@@ -27,11 +27,22 @@ public class CrimeFragment extends Fragment {
     private Button mBtnDate;
     private CheckBox mCbSolved;
 
+    // 创建实实例的静态方法
+    // 通过Bundle实现数据传递
+    public static CrimeFragment newInstance(UUID crimeID) {
+        Bundle args = new Bundle();
+        args.putSerializable(ARG_CRIME_ID, crimeID);
+
+        CrimeFragment crimeFragment = new CrimeFragment();
+        crimeFragment.setArguments(args);
+        return  crimeFragment;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        UUID uuid = (UUID) getActivity().getIntent().getSerializableExtra(EXTRA_CRIME_ID);
+        UUID uuid = (UUID) getArguments().getSerializable(ARG_CRIME_ID);
         mCrime = CrimeLab.get(getActivity()).getCrime(uuid);
     }
 

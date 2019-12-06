@@ -15,6 +15,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import java.util.UUID;
+
 public class CrimeFragment extends Fragment {
     private Crime mCrime;
 
@@ -26,7 +28,8 @@ public class CrimeFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mCrime = new Crime();
+        UUID uuid = (UUID) getActivity().getIntent().getSerializableExtra(CrimeActivity.EXTRA_CRIME_ID);
+        mCrime = CrimeLab.get(getActivity()).getCrime(uuid);
     }
 
     @Nullable
@@ -36,6 +39,7 @@ public class CrimeFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_crime, container,false);
 
         mEtTitle = v.findViewById(R.id.et_crime_title);
+        mEtTitle.setText(mCrime.getTitle());
         mEtTitle.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -58,6 +62,7 @@ public class CrimeFragment extends Fragment {
         mBtnDate.setEnabled(false);
 
         mCbSolved = v.findViewById(R.id.cb_crime_solved);
+        mCbSolved.setChecked(mCrime.isSolved());
         mCbSolved.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {

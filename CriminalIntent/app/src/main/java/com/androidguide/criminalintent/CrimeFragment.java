@@ -14,12 +14,16 @@ import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import java.util.UUID;
 
 public class CrimeFragment extends Fragment {
     // Intent数据传输ID
     private static final String ARG_CRIME_ID = "com.androidguide.criminalintent.crime_id";
+
+    // Fragment的唯一识别tag
+    private static final String DATE_PICKER_DIALOG = "com.androidguide.criminalintent.date_picker_dialog";
 
     private Crime mCrime;
 
@@ -73,7 +77,14 @@ public class CrimeFragment extends Fragment {
 
         mBtnDate = v.findViewById(R.id.btn_crime_date);
         mBtnDate.setText(mCrime.getDate().toString());
-        mBtnDate.setEnabled(false);
+        mBtnDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentManager fm = getFragmentManager();
+                DatePickerFragment dlg = new DatePickerFragment();
+                dlg.show(fm, DATE_PICKER_DIALOG);
+            }
+        });
 
         mCbSolved = v.findViewById(R.id.cb_crime_solved);
         mCbSolved.setChecked(mCrime.isSolved());

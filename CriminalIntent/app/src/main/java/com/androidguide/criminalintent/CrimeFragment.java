@@ -1,5 +1,7 @@
 package com.androidguide.criminalintent;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,6 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import java.util.Date;
 import java.util.UUID;
 
 public class CrimeFragment extends Fragment {
@@ -24,6 +27,9 @@ public class CrimeFragment extends Fragment {
 
     // Fragment的唯一识别tag
     private static final String DATE_PICKER_DIALOG = "com.androidguide.criminalintent.date_picker_dialog";
+
+    // 用于从日期控件返回值进使用
+    private static final int REQUEST_DATE = 1;
 
     private Crime mCrime;
 
@@ -82,6 +88,7 @@ public class CrimeFragment extends Fragment {
             public void onClick(View view) {
                 FragmentManager fm = getFragmentManager();
                 DatePickerFragment dlg = DatePickerFragment.newInstance(mCrime.getDate());
+                dlg.setTargetFragment(CrimeFragment.this, REQUEST_DATE);
                 dlg.show(fm, DATE_PICKER_DIALOG);
             }
         });
@@ -96,5 +103,17 @@ public class CrimeFragment extends Fragment {
         });
 
         return v;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (Activity.RESULT_OK != resultCode) {
+            return;
+        }
+        if (REQUEST_DATE == requestCode) {
+            Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_CRIME_DATE);
+            mCrime.setDate(date);
+            mBtnDate.setText(mCrime.getDate().toString());
+        }
     }
 }

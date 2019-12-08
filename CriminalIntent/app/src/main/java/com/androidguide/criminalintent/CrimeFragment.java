@@ -82,7 +82,7 @@ public class CrimeFragment extends Fragment {
         });
 
         mBtnDate = v.findViewById(R.id.btn_crime_date);
-        mBtnDate.setText(mCrime.getDate().toString());
+        updateDate();
         mBtnDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -113,7 +113,11 @@ public class CrimeFragment extends Fragment {
         if (REQUEST_DATE == requestCode) {
             Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_CRIME_DATE);
             mCrime.setDate(date);
-            mBtnDate.setText(mCrime.getDate().toString());
+            updateDate();
         }
+    }
+
+    private void updateDate() {
+        mBtnDate.setText(mCrime.getDate().toString());
     }
 }

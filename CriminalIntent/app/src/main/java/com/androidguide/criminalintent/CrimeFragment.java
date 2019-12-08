@@ -81,7 +81,7 @@ public class CrimeFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 FragmentManager fm = getFragmentManager();
-                DatePickerFragment dlg = new DatePickerFragment();
+                DatePickerFragment dlg = DatePickerFragment.newInstance(mCrime.getDate());
                 dlg.show(fm, DATE_PICKER_DIALOG);
             }
         });

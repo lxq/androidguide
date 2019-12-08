@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import java.util.Calendar;
 import java.util.Date;
 
 public class DatePickerFragment extends DialogFragment {
@@ -30,7 +31,20 @@ public class DatePickerFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+        // 获取外部传入参数
+        Date date = (Date) getArguments().getSerializable(ARG_CRIME_DATE);
+
+        // Date 转为 Calender，并获取年月日整数。
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
         View v = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_date_picker, null);
+        mDatePicker = v.findViewById(R.id.crime_date_picker);
+        mDatePicker.init(year, month, day, null);
+
         return new AlertDialog.Builder(getActivity())
                 .setView(v)
                 .setTitle(R.string.date_picker_title)

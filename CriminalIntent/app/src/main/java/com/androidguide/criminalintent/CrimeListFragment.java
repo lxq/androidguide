@@ -99,6 +99,9 @@ public class CrimeListFragment extends Fragment {
         } else {
             mCrimeAdapter.notifyDataSetChanged();
         }
+
+        // 解决后退键更新菜单显示
+        updateSubtitleMenu();
     }
 
     private void updateSubtitleMenu() {

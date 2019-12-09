@@ -72,7 +72,7 @@ public class CrimeFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
+                mCrime.setTitle(charSequence.toString());
             }
 
             @Override

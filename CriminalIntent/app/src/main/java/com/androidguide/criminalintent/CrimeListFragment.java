@@ -25,6 +25,8 @@ public class CrimeListFragment extends Fragment {
     private RecyclerView mCrimeRView;
     private CrimeAdapter mCrimeAdapter;
 
+    private boolean mSubtitleVisible;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +60,13 @@ public class CrimeListFragment extends Fragment {
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_crime_list, menu);
+
+        MenuItem item = menu.findItem(R.id.show_subtitle);
+        if (mSubtitleVisible) {
+            item.setTitle(R.string.show_subtitle);
+        } else {
+            item.setTitle(R.string.hide_subtitle);
+        }
     }
 
     // 菜单项事件响应
@@ -71,6 +80,8 @@ public class CrimeListFragment extends Fragment {
                 startActivity(intent);
                 return true;
             case R.id.show_subtitle:
+                mSubtitleVisible = !mSubtitleVisible;
+                getActivity().invalidateOptionsMenu();
                 updateSubtitleMenu();
                 return true;
             default:
@@ -94,6 +105,10 @@ public class CrimeListFragment extends Fragment {
         CrimeLab crimeLab = CrimeLab.get(getActivity());
         int size = crimeLab.getCrimes().size();
         String subtitle = getString(R.string.subtitle_format, size);
+
+        if (!mSubtitleVisible) {
+            subtitle = null;
+        }
 
         AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
         appCompatActivity.getSupportActionBar().setSubtitle(subtitle);

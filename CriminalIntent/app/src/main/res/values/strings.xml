@@ -15,5 +15,5 @@
     <string name="new_crime">新建</string>
     <string name="show_subtitle">显示子标题</string>
     <string name="hide_subtitle">隐藏子标题</string>
-    <string name="subtitle_format">%1$d 号</string>
+    <string name="subtitle_format">总数：%1$d</string>
 </resources>

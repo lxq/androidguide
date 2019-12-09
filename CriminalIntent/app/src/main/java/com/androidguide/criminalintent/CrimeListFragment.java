@@ -3,6 +3,8 @@ package com.androidguide.criminalintent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -20,6 +22,14 @@ public class CrimeListFragment extends Fragment {
 
     private RecyclerView mCrimeRView;
     private CrimeAdapter mCrimeAdapter;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // 使能 onCreateOptionsMenu()
+        setHasOptionsMenu(true);
+    }
 
     @Nullable
     @Override
@@ -39,6 +49,13 @@ public class CrimeListFragment extends Fragment {
         super.onResume();
 
         updateUI();
+    }
+
+    // 菜单响应控制
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_crime_list, menu);
     }
 
     private void updateUI() {

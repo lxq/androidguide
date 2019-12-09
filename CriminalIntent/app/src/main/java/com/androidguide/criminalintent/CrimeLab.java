@@ -1,6 +1,9 @@
 package com.androidguide.criminalintent;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+
+import com.androidguide.criminalintent.db.CrimeBaseHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +15,10 @@ public class CrimeLab {
 
     private List<Crime> mCrimes;
 
+    private Context mContext;
+    //SQLite
+    private SQLiteDatabase mDatabase;
+
     // 获取单件实例
     public static CrimeLab get(Context ctx) {
         if (null == sCrimeLab) {
@@ -21,6 +28,10 @@ public class CrimeLab {
     }
     // 单件类不允许外部构建
     private CrimeLab(Context ctx) {
+        mContext = ctx.getApplicationContext();
+        // 创建可写的SQLite db
+        mDatabase = new CrimeBaseHelper(mContext).getWritableDatabase();
+
         mCrimes = new ArrayList<>();
         // init
         for (int i = 0; i < 5; i++) {

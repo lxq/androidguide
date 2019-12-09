@@ -23,7 +23,7 @@ public class CrimeLab {
     private CrimeLab(Context ctx) {
         mCrimes = new ArrayList<>();
         // init
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 5; i++) {
             Crime e = new Crime();
             e.setTitle("习惯 #" + i);
             e.setSolved((i%2) == 0);
@@ -42,5 +42,9 @@ public class CrimeLab {
             }
         }
         return null;
+    }
+
+    public void addCrime(Crime c) {
+        mCrimes.add(c);
     }
 }

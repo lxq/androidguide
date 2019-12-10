@@ -10,10 +10,14 @@ public class Crime {
     private Date mDate;
     private boolean mSolved;
 
+    // 新增构造函数
+    public Crime(UUID id) {
+        mId = id;
+        mDate = new Date();
+    }
     // Constructor
     public Crime() {
-        mId = UUID.randomUUID();
-        mDate = new Date();
+        this(UUID.randomUUID());
     }
 
     public UUID getId() {

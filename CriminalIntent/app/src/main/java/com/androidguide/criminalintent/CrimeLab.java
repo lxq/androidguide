@@ -1,9 +1,14 @@
 package com.androidguide.criminalintent;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.androidguide.criminalintent.db.CrimeBaseHelper;
+import com.androidguide.criminalintent.db.CrimeCursorWrapper;
+import com.androidguide.criminalintent.db.CrimeSchema;
+import com.androidguide.criminalintent.db.CrimeSchema.CrimeTable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,8 +17,6 @@ import java.util.UUID;
 // 单件类
 public class CrimeLab {
     private static  CrimeLab sCrimeLab;
-
-    private List<Crime> mCrimes;
 
     private Context mContext;
     //SQLite
@@ -32,30 +35,79 @@ public class CrimeLab {
         // 创建可写的SQLite db
         mDatabase = new CrimeBaseHelper(mContext).getWritableDatabase();
 
-        mCrimes = new ArrayList<>();
-        // init
-        for (int i = 0; i < 5; i++) {
-            Crime e = new Crime();
-            e.setTitle("习惯 #" + i);
-            e.setSolved((i%2) == 0);
-            mCrimes.add(e);
-        }
     }
 
     public List<Crime> getCrimes() {
-        return mCrimes;
+        List<Crime> crimes = new ArrayList<>();
+
+        // 查询所有记录
+        CrimeCursorWrapper cursor = query(null, null);
+        // 通过游标进行遍历操作
+        try {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                crimes.add(cursor.getCrime());
+                cursor.moveToNext();
+            }
+        } finally {
+            cursor.close();
+        }
+
+        return crimes;
     }
 
     public Crime getCrime(UUID id) {
-        for (Crime e: mCrimes) {
-            if (e.getId().equals(id)) {
-                return e;
+        // 关键字查询
+        CrimeCursorWrapper cursor = query(CrimeTable.Cols.UUID + " = ?",
+                new String[]{id.toString()});
+        try {
+            if (0 == cursor.getCount()) {
+                return null;
             }
+            cursor.moveToFirst();
+            return cursor.getCrime();
+        } finally {
+            cursor.close();
         }
-        return null;
-    }
+   }
 
     public void addCrime(Crime c) {
-        mCrimes.add(c);
+        ContentValues values = getContentValues(c);
+        // 插入SQLite的表中
+        mDatabase.insert(CrimeTable.NAME, null, values);
+    }
+
+    // 更新表记录
+    public void update(Crime c) {
+        String uuid = c.getId().toString();
+        ContentValues values = getContentValues(c);
+        mDatabase.update(CrimeTable.NAME, values,
+                CrimeTable.Cols.UUID + " = ?",
+                new String[]{uuid});
+    }
+
+    // 查询表数据
+    private CrimeCursorWrapper query(String clause, String[] args) {
+        Cursor cursor = mDatabase.query(
+                CrimeTable.NAME,
+                null,// null表示全部列
+                clause,
+                args,
+                null, // groupBy
+                null,
+                null
+        );
+
+        return new CrimeCursorWrapper(cursor);
+    }
+
+    // 一条记录的值
+    private static ContentValues getContentValues(Crime c) {
+        ContentValues values = new ContentValues();
+        values.put(CrimeTable.Cols.UUID, c.getId().toString());
+        values.put(CrimeTable.Cols.TITLE, c.getTitle());
+        values.put(CrimeTable.Cols.DATE, c.getDate().toString());
+        values.put(CrimeTable.Cols.SOLVED, c.isSolved()?1:0);
+        return values;
     }
 }

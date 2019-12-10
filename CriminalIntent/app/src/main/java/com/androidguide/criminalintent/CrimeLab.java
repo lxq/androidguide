@@ -31,6 +31,8 @@ public class CrimeLab {
     }
     // 单件类不允许外部构建
     private CrimeLab(Context ctx) {
+        // 这里使用APP Context的原因是，数据库是进程存在期间都需要操作的；
+        // 而Activity的Context会有自己的生命周期，不能满足在整个应用中使用db的要求.
         mContext = ctx.getApplicationContext();
         // 创建可写的SQLite db
         mDatabase = new CrimeBaseHelper(mContext).getWritableDatabase();

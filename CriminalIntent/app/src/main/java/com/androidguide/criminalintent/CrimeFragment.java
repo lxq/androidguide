@@ -2,6 +2,7 @@ package com.androidguide.criminalintent;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -137,6 +138,12 @@ public class CrimeFragment extends Fragment {
 
         if (null != mCrime.getSuspect()) {
             mBtnSuspect.setText(mCrime.getSuspect());
+        }
+
+        // 判断系统是否有联系人APP，以避免应用崩溃。
+        PackageManager packageManager = getActivity().getPackageManager();
+        if (null == packageManager.resolveActivity(pickIntent, PackageManager.MATCH_DEFAULT_ONLY)) {
+            mBtnSuspect.setEnabled(false);
         }
 
         return v;

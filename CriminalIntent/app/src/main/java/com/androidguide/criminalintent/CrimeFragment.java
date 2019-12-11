@@ -2,7 +2,10 @@ package com.androidguide.criminalintent;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
@@ -32,6 +35,8 @@ public class CrimeFragment extends Fragment {
 
     // 用于从日期控件返回值进使用
     private static final int REQUEST_DATE = 1;
+    // 选择联系人
+    private static final int REQUEST_CONTACT = 2;
 
     private Crime mCrime;
 
@@ -39,6 +44,7 @@ public class CrimeFragment extends Fragment {
     private Button mBtnDate;
     private CheckBox mCbSolved;
     private Button mBtnReport;
+    private Button mBtnSuspect;
 
     // 创建实实例的静态方法
     // 通过Bundle实现数据传递
@@ -120,6 +126,19 @@ public class CrimeFragment extends Fragment {
             }
         });
 
+        final Intent pickIntent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+        mBtnSuspect = v.findViewById(R.id.btn_crime_suspect);
+        mBtnSuspect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                   startActivityForResult(pickIntent, REQUEST_CONTACT);
+            }
+        });
+
+        if (null != mCrime.getSuspect()) {
+            mBtnSuspect.setText(mCrime.getSuspect());
+        }
+
         return v;
     }
 
@@ -132,6 +151,29 @@ public class CrimeFragment extends Fragment {
             Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_CRIME_DATE);
             mCrime.setDate(date);
             updateDate();
+        } else if (REQUEST_CONTACT == requestCode && null != data) {
+            // 从联系人中返回数据
+            Uri uri = data.getData();
+
+            // 指定只显示联系人的哪些字段
+            String[] fields = new String[] {
+                    ContactsContract.Contacts.DISPLAY_NAME
+            };
+            // 查询
+            Cursor cursor = getActivity().getContentResolver()
+                    .query(uri, fields, null, null, null);
+            try {
+                if (0 == cursor.getCount()) {
+                    return;
+                }
+
+                cursor.moveToFirst();
+                String name = cursor.getString(0);
+                mCrime.setSuspect(name);
+                mBtnSuspect.setText(name);
+            } finally {
+                cursor.close();
+            }
         }
     }
 

@@ -38,6 +38,7 @@ public class CrimeFragment extends Fragment {
     private EditText mEtTitle;
     private Button mBtnDate;
     private CheckBox mCbSolved;
+    private Button mBtnReport;
 
     // 创建实实例的静态方法
     // 通过Bundle实现数据传递
@@ -101,6 +102,21 @@ public class CrimeFragment extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 mCrime.setSolved(b);
+            }
+        });
+
+        mBtnReport = v.findViewById(R.id.btn_crime_report);
+        mBtnReport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // 隐式Intent的使用
+                Intent i = new Intent(Intent.ACTION_SEND);
+                i.setType("text/plain");
+                i.putExtra(Intent.EXTRA_TEXT, getReport());
+                i.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.crime_report_suspect));
+                // 加入选择器
+                i = Intent.createChooser(i, getString(R.string.crime_report_send));
+                startActivity(i);
             }
         });
 

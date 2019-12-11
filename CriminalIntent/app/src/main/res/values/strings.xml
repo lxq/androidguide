@@ -19,4 +19,11 @@
     
     <string name="crime_suspect_text">选择嫌疑犯</string>
     <string name="crime_report_text">发送短信</string>
+    <string name="crime_report">%1$s! 罪行发现于%2$s. %3$s, %4$s。</string>
+    <string name="crime_report_solved">已解决</string>
+    <string name="crime_report_unsolved">未解决</string>
+    <string name="crime_report_no_suspect">没有嫌疑犯</string>
+    <string name="crime_report_suspect">嫌疑犯是%s。</string>
+    <string name="crime_report_subject">罪行报告</string>
+    <string name="crime_report_send">发送罪行报告</string>
 </resources>

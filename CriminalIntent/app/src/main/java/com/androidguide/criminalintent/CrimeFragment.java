@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import androidx.fragment.app.FragmentManager;
 
 import java.util.Date;
 import java.util.UUID;
+
 
 public class CrimeFragment extends Fragment {
     // Intent数据传输ID
@@ -127,5 +129,29 @@ public class CrimeFragment extends Fragment {
 
     private void updateDate() {
         mBtnDate.setText(mCrime.getDate().toString());
+    }
+
+    private String getReport() {
+        String strSovled = null;
+
+        if (mCrime.isSolved()) {
+            strSovled = getString(R.string.crime_report_solved);
+        } else {
+            strSovled = getString(R.string.crime_report_unsolved);
+        }
+
+        String strFmt = "EEE, MM dd";
+        String strDate = DateFormat.format(strFmt, mCrime.getDate()).toString();
+
+        String suspect = mCrime.getSuspect();
+        if (null == suspect) {
+            suspect = getString(R.string.crime_report_no_suspect);
+        } else {
+            suspect = getString(R.string.crime_report_suspect);
+        }
+
+        String report = getString(R.string.crime_report, mCrime.
+                getTitle(), strDate, strSovled, suspect);
+        return report;
     }
 }

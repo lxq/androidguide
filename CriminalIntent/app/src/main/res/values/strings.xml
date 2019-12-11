@@ -16,4 +16,7 @@
     <string name="show_subtitle">显示子标题</string>
     <string name="hide_subtitle">隐藏子标题</string>
     <string name="subtitle_format">总数：%1$d</string>
+    
+    <string name="crime_suspect_text">选择嫌疑犯</string>
+    <string name="crime_report_text">发送短信</string>
 </resources>

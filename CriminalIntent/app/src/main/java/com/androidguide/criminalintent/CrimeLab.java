@@ -10,11 +10,13 @@ import com.androidguide.criminalintent.db.CrimeCursorWrapper;
 import com.androidguide.criminalintent.db.CrimeSchema;
 import com.androidguide.criminalintent.db.CrimeSchema.CrimeTable;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 // 单件类
+// 用于实现模型对象的数据持久化操作
 public class CrimeLab {
     private static  CrimeLab sCrimeLab;
 
@@ -112,5 +114,11 @@ public class CrimeLab {
         values.put(CrimeTable.Cols.SOLVED, c.isSolved()?1:0);
         values.put(CrimeTable.Cols.SUSPECT, c.getSuspect());
         return values;
+    }
+
+    // 获取对象对应的照片文件对象
+    public File getPhotoFile(Crime c) {
+        File dir = mContext.getFilesDir();
+        return new File(dir, c.getPhotoFilename());
     }
 }

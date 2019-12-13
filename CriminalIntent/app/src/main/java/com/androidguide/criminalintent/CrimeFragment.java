@@ -3,10 +3,13 @@ package com.androidguide.criminalintent;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
@@ -17,13 +20,18 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import java.io.File;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -34,10 +42,15 @@ public class CrimeFragment extends Fragment {
     // Fragment的唯一识别tag
     private static final String DATE_PICKER_DIALOG = "com.androidguide.criminalintent.date_picker_dialog";
 
+    // FileProvider 授权
+    private static final String FILE_PROVIDER_AUTH = "com.androidguide.criminalintent.fileprovider";
+
     // 用于从日期控件返回值进使用
     private static final int REQUEST_DATE = 1;
     // 选择联系人
     private static final int REQUEST_CONTACT = 2;
+    // 拍照
+    private static final int REQUEST_CAMERA = 3;
 
     private Crime mCrime;
 
@@ -46,6 +59,10 @@ public class CrimeFragment extends Fragment {
     private CheckBox mCbSolved;
     private Button mBtnReport;
     private Button mBtnSuspect;
+    private ImageView mImageViewPhoto;
+    private ImageButton mImageButtonCamera;
+
+    private File mPhotoFile;
 
     // 创建实实例的静态方法
     // 通过Bundle实现数据传递
@@ -64,6 +81,8 @@ public class CrimeFragment extends Fragment {
 
         UUID uuid = (UUID) getArguments().getSerializable(ARG_CRIME_ID);
         mCrime = CrimeLab.get(getActivity()).getCrime(uuid);
+
+        mPhotoFile = CrimeLab.get(getActivity()).getPhotoFile(mCrime);
     }
 
     @Nullable
@@ -146,6 +165,37 @@ public class CrimeFragment extends Fragment {
             mBtnSuspect.setEnabled(false);
         }
 
+        mImageButtonCamera = v.findViewById(R.id.ib_crime_camera);
+
+        final Intent captureImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        boolean enable = null != mPhotoFile && null != captureImage.resolveActivity(packageManager);
+        mImageButtonCamera.setEnabled(enable);
+
+        mImageButtonCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // 实现调用camera进行拍照，并获取结果照片。
+
+                // 获取应用内容的存储路径，并传递给Camera应用。
+                Uri uri = FileProvider.getUriForFile(getActivity(),
+                        FILE_PROVIDER_AUTH,mPhotoFile);
+                captureImage.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+
+                List<ResolveInfo> cameraActivities = getActivity()
+                        .getPackageManager()
+                        .queryIntentActivities(captureImage, PackageManager.MATCH_DEFAULT_ONLY);
+                for (ResolveInfo info: cameraActivities) {
+                    getActivity().grantUriPermission(info.activityInfo.packageName,
+                            uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION); // 给Camera应用授予写入本地的权限
+                }
+
+                startActivityForResult(captureImage, REQUEST_CAMERA);
+            }
+        });
+
+        mImageViewPhoto = v.findViewById(R.id.iv_crime_photo);
+        updatePhotoView();
+
         return v;
     }
 
@@ -181,6 +231,11 @@ public class CrimeFragment extends Fragment {
             } finally {
                 cursor.close();
             }
+        } else if ( REQUEST_CAMERA == requestCode) {
+            Uri uri = FileProvider.getUriForFile(getActivity(), FILE_PROVIDER_AUTH, mPhotoFile);
+            getActivity().revokeUriPermission(uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+
+            updatePhotoView();
         }
     }
 
@@ -218,5 +273,14 @@ public class CrimeFragment extends Fragment {
         String report = getString(R.string.crime_report, mCrime.
                 getTitle(), strDate, strSovled, suspect);
         return report;
+    }
+
+    private void updatePhotoView() {
+        if (null == mPhotoFile || !mPhotoFile.exists()) { // NOTE: 2个判断条件
+            mImageViewPhoto.setImageDrawable(null);
+        } else {
+            Bitmap bitmap = PhotoUtils.getScaledBitmap(mPhotoFile.getPath(), getActivity());
+            mImageViewPhoto.setImageBitmap(bitmap);
+        }
     }
 }
